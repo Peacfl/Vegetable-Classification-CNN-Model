@@ -4,6 +4,7 @@ import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 from PIL import Image
+from huggingface_hub import hf_hub_download
 import os
 
 # Hardcode class names from your Colab output (replace with actual 15 vegetable names, sorted alphabetically)
@@ -46,7 +47,13 @@ def load_model():
     )
     
     # Load the saved weights
-    weights_path = r"models\vegetable_classifier_weights.weights.h5"  # Use raw string for Windows path
+
+    weights_path = hf_hub_download(
+    repo_id="Peacfl/Vegetable-image-classification",
+    filename="vegetable_classifier_weights.weights.h5"
+)
+
+model = tf.keras.models.load_model(model_path)
     model.load_weights(weights_path)
     
     return model
@@ -109,4 +116,5 @@ with st.sidebar:
     st.write("Input size: 150x150 pixels.")
     if st.button("Reload Model"):
         st.cache_resource.clear()
+
         st.rerun()
